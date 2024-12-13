@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.2.60",
+		"generator":"Khronos glTF Blender I/O v4.0.44",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -16,11 +16,21 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Roundcube.014"
+			"name":"Roundcube.014",
+			"scale":[
+				1000,
+				1000,
+				1000
+			]
 		},
 		{
 			"mesh":1,
-			"name":"Roundcube.015"
+			"name":"Roundcube.015",
+			"scale":[
+				0.10000000149011612,
+				0.10000000149011612,
+				0.10000000149011612
+			]
 		}
 	],
 	"materials":[
@@ -207,7 +217,7 @@
 	"buffers":[
 		{
 			"byteLength":4240,
-			"uri":"Christmas_ball.bin"
+			"uri":"untitled.bin"
 		}
 	]
 }
