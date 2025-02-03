@@ -30,6 +30,7 @@
         document.body.appendChild(renderer.domElement);
 
         // === Загружаем сцену из JSON ===
+        const loader = new THREE.ObjectLoader();
         getJSON("scene.json", function(json) {
             console.log("Загруженный JSON:", json); 
             const loadedScene = loader.parse(json);
