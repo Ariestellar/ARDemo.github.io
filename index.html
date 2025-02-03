@@ -53,12 +53,6 @@
             }
         );
 
-
-        // Alternatively, to parse a previously loaded JSON structure
-        const object = loader.parse( a_json_object );
-
-        scene.add( object );
-
         // === Добавляем свет ===
         const light = new THREE.AmbientLight(0xffffff, 1);
         scene.add(light);
