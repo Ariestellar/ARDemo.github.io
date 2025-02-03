@@ -9,6 +9,19 @@
 </head>
 <body style="margin: 0; overflow: hidden;">
     <script>
+        function getJSON(url, callback) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => callback(data))
+                .catch(error => console.error("Ошибка загрузки JSON:", error));
+        }
+
+
         // === Создаём сцену ===
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -17,13 +30,11 @@
         document.body.appendChild(renderer.domElement);
 
         // === Загружаем сцену из JSON ===
-        const loader = new THREE.ObjectLoader();
         getJSON("scene.json", function(json) {
-            console.log(json); 
-            loader.load(json, function (loadedScene) {
+            console.log("Загруженный JSON:", json); 
+            const loadedScene = loader.parse(json);
             scene.add(loadedScene);
         });
-        });        
 
         // === Добавляем свет ===
         const light = new THREE.AmbientLight(0xffffff, 1);
