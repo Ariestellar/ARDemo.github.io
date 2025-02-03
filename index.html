@@ -31,11 +31,33 @@
 
         // === Загружаем сцену из JSON ===
         const loader = new THREE.ObjectLoader();
-        getJSON("scene.json", function(json) {
-            console.log("Загруженный JSON:", json); 
-            const loadedScene = loader.parse(json);
-            scene.add(loadedScene);
-        });
+        loader.load(
+            // resource URL
+            "scene.json",
+
+            // onLoad callback
+            // Here the loaded data is assumed to be an object
+            function ( obj ) {
+                // Add the loaded object to the scene
+                scene.add( obj );
+            },
+
+            // onProgress callback
+            function ( xhr ) {
+                console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+            },
+
+            // onError callback
+            function ( err ) {
+                console.error( 'An error happened' );
+            }
+        );
+
+
+        // Alternatively, to parse a previously loaded JSON structure
+        const object = loader.parse( a_json_object );
+
+        scene.add( object );
 
         // === Добавляем свет ===
         const light = new THREE.AmbientLight(0xffffff, 1);
