@@ -18,9 +18,12 @@
 
         // === Загружаем сцену из JSON ===
         const loader = new THREE.ObjectLoader();
-        loader.load('https://raw.githubusercontent.com/ariestellar.github.io/ARDemo.github.io/main/scene.json', function (loadedScene) {
+        $.getJSON("scene.json", function(json) {
+            console.log(json); 
+            loader.load(json, function (loadedScene) {
             scene.add(loadedScene);
         });
+        });        
 
         // === Добавляем свет ===
         const light = new THREE.AmbientLight(0xffffff, 1);
