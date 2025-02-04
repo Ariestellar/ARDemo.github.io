@@ -2,109 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motion Tracking with Three.js</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://raw.githubusercontent.com/mrdoob/three.js/dev/src/loaders/ObjectLoader.js"></script>
+    <title>Wael Yasmina</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
 </head>
-<body style="margin: 0; overflow: hidden;">
-    <script>
-        function getJSON(url, callback) {
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => callback(data))
-                .catch(error => console.error("Ошибка загрузки JSON:", error));
-        }
-
-
-        // === Создаём сцену ===
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // === Загружаем сцену из JSON ===
-        const loader = new GLTFLoader();
-        loader.load( 'scene.gltf', function ( gltf ) {
-            scene.add( gltf.scene );
-        }, undefined, function ( error ) {
-            console.error( error );
-        } );
-
-        // === Добавляем свет ===
-        const light = new THREE.AmbientLight(0xffffff, 1);
-        scene.add(light);
-
-        // === Начальная позиция камеры ===
-        camera.position.set(0, 1.6, 0);
-
-        // === Данные для трекинга ===
-        let velocity = new THREE.Vector3(); // Скорость перемещения
-        let lastAcceleration = new THREE.Vector3();
-        const damping = 0.98;  // Трение
-
-        // === Обработчик поворота ===
-        function handleOrientation(event) {
-            let alpha = THREE.MathUtils.degToRad(event.alpha); // Yaw
-            let beta = THREE.MathUtils.degToRad(event.beta);   // Pitch
-            let gamma = THREE.MathUtils.degToRad(event.gamma); // Roll
-
-            let euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ'); 
-            camera.quaternion.setFromEuler(euler);
-        }
-
-        // === Обработчик ускорения ===
-        function handleMotion(event) {
-            let acceleration = new THREE.Vector3(event.acceleration.x, event.acceleration.y, event.acceleration.z);
-            let deltaAcceleration = acceleration.clone().sub(lastAcceleration);
-            velocity.add(deltaAcceleration.multiplyScalar(0.01)); // Интеграция ускорения в скорость
-            velocity.multiplyScalar(damping); // Затухание
-            camera.position.add(velocity);
-            lastAcceleration.copy(acceleration);
-        }
-
-        // === Запрос разрешений в iOS ===
-        function requestPermissions() {
-            if (typeof DeviceMotionEvent.requestPermission === 'function') {
-                DeviceMotionEvent.requestPermission().then(permissionState => {
-                    if (permissionState === 'granted') {
-                        window.addEventListener("deviceorientation", handleOrientation);
-                        window.addEventListener("devicemotion", handleMotion);
-                    }
-                }).catch(console.error);
-            } else {
-                window.addEventListener("deviceorientation", handleOrientation);
-                window.addEventListener("devicemotion", handleMotion);
-            }
-        }
-
-        // === Кнопка запроса разрешений (только для iOS) ===
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-            let btn = document.createElement("button");
-            btn.innerText = "Разрешить сенсоры";
-            btn.style.position = "absolute";
-            btn.style.top = "10px";
-            btn.style.left = "10px";
-            btn.style.padding = "10px";
-            btn.style.fontSize = "16px";
-            btn.onclick = requestPermissions;
-            document.body.appendChild(btn);
-        } else {
-            requestPermissions();
-        }
-
-        // === Анимация ===
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-        animate();
-    </script>
+<body>
+    <script src="/main.js" type="module"></script>
 </body>
 </html>
