@@ -30,7 +30,6 @@
         document.body.appendChild(renderer.domElement);
 
         // === Загружаем сцену из JSON ===
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         const loader = new GLTFLoader();
         loader.load( 'scene.gltf', function ( gltf ) {
             scene.add( gltf.scene );
