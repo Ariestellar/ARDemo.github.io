@@ -1,14 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>My first three.js app</title>
-		<style>
-			body { margin: 0; }
-		</style>
-		<script type="module" crossorigin src="./assets/index-BXDD5_AW.js"></script>
-	</head>
-	<body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gyroscope Camera - Three.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/DeviceOrientationControls.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+    <script>
+        let scene, camera, renderer, controls;
 
-	</body>
+        function init() {
+            // === Создаём сцену ===
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // === Добавляем свет ===
+            const light = new THREE.AmbientLight(0xffffff, 1);
+            scene.add(light);
+
+            // === Добавляем плоскость ===
+            const planeGeometry = new THREE.PlaneGeometry(10, 10);
+            const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x008800 });
+            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            plane.rotation.x = -Math.PI / 2;
+            scene.add(plane);
+
+            // === Добавляем тестовый куб ===
+            const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            const box = new THREE.Mesh(boxGeometry, boxMaterial);
+            box.position.set(0, 1, -2);
+            scene.add(box);
+
+            // === Устанавливаем начальную позицию камеры ===
+            camera.position.set(0, 1.6, 3);
+
+            // === Настраиваем управление камерой ===
+            controls = new THREE.DeviceOrientationControls(camera);
+            
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // Обновляем поворот камеры
+            renderer.render(scene, camera);
+        }
+
+        // === Запрос разрешений в iOS ===
+        function requestPermissions() {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission().then(permissionState => {
+                    if (permissionState === 'granted') {
+                        init();
+                    } else {
+                        alert("Доступ к сенсорам отклонён!");
+                    }
+                }).catch(console.error);
+            } else {
+                init();
+            }
+        }
+
+        // === Кнопка запроса разрешений (только для iOS) ===
+        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            let btn = document.createElement("button");
+            btn.innerText = "Разрешить сенсоры";
+            btn.style.position = "absolute";
+            btn.style.top = "10px";
+            btn.style.left = "10px";
+            btn.style.padding = "10px";
+            btn.style.fontSize = "16px";
+            btn.onclick = requestPermissions;
+            document.body.appendChild(btn);
+        } else {
+            requestPermissions();
+        }
+
+    </script>
+</body>
 </html>
